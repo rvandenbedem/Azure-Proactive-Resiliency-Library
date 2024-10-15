@@ -16,23 +16,28 @@ The presented resiliency recommendations in this guidance include Aks and associ
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------:|:-------:|:-------:|:-------------------:|
 | [AKS-1 - Deploy AKS cluster across availability zones](#aks-1---deploy-aks-cluster-across-availability-zones)                                                                                                               |   Availability    |  High   | Preview |         Yes         |
 | [AKS-2 - Isolate system and application pods](#aks-2---isolate-system-and-application-pods)                                                                                                                                 |    Governance     |  High   | Preview |         Yes         |
-| [AKS-3 - Enable AKS-managed Azure AD integration](#aks-3---enable-aks-managed-azure-ad-integration)                                                                                                                         | Access & Security |  High   | Preview |         Yes         |
+| [AKS-3 - Disable local accounts](#aks-3---disable-local-accounts)                                                                                                                         | Access & Security |  High   | Preview |         Yes         |
 | [AKS-4 - Configure Azure CNI networking for dynamic allocation of IPs](#aks-4---configure-azure-cni-networking-for-dynamic-allocation-of-ips)                                                                               |    Networking    | Medium  | Preview |         Yes         |
 | [AKS-5 - Enable the cluster auto-scaler on an existing cluster](#aks-5---enable-the-cluster-auto-scaler-on-an-existing-cluster)                                                                                             | System Efficiency |  High   | Preview |         Yes         |
 | [AKS-6 - Back up Azure Kubernetes Service](#aks-6---back-up-azure-kubernetes-service)                                                                                                                                       | Disaster Recovery |   Low   | Preview |         No          |
 | [AKS-7 - Plan an AKS version upgrade](#aks-7---plan-an-aks-version-upgrade)                                                                                                                                                 |    Compliance     |  High   | Preview |         No          |
-| [AKS-8 - Ensure that Persistent Volumes in storage account are redundant for Pods with stateful applications](#aks-8---ensure-that-persistent-volumes-in-storage-account-are-redundant-for-pods-with-stateful-applications) |   Availability    |   Low   | Preview |         No          |
-| [AKS-9 - Upgrade Persistent Volumes with deprecated version to Azure CSI drivers](#aks-9---upgrade-persistent-volumes-with-deprecated-version-to-azure-csi-drivers)                                                         |   Storage  | High   | Preview |   No    |
+| [AKS-8 - Use zone-redundant storage for persistent volumes when running multi-zone AKS](#aks-8---use-zone-redundant-storage-for-persistent-volumes-when-running-multi-zone-aks) |   Availability    |   Low   | Verified |         No          |
+| [AKS-9 - Upgrade Persistent Volumes using in-tree drivers to Azure CSI drivers](#aks-9---upgrade-persistent-volumes-using-in-tree-drivers-to-azure-csi-drivers)                                                         |   Storage  | High   | Verified |   No    |
 | [AKS-10 - Implement Resource Quota to ensure that Kubernetes resources do not exceed hard resource limits.](#aks-10---implement-resource-quota-to-ensure-that-kubernetes-resources-do-not-exceed-hard-resource-limits)      | System Efficiency |   Low   | Preview |         No          |
 | [AKS-11 - Attach Virtual Nodes (ACI) to the AKS cluster](#aks-11---attach-virtual-nodes-aci-to-the-aks-cluster)                                                                                                             | System Efficiency |   Low   | Preview |         No          |
 | [AKS-12 - Update AKS tier to Standard](#aks-12---update-aks-tier-to-standard)                                                                                                                                               |   Availability   |  High   | Preview |         Yes         |
 | [AKS-13 - Enable AKS Monitoring](#aks-13---enable-aks-monitoring)                                                                                                                                                           |    Monitoring     |  High   | Preview |         Yes         |
-| [AKS-14 - Use Ephemeral Disks on AKS clusters](#aks-14---use-ephemeral-disks-on-aks-clusters)                                                                                                                               | System Efficiency | Medium  | Preview |         No          |
+| [AKS-14 - Use Ephemeral OS disks on AKS clusters](#aks-14---use-ephemeral-os-disks-on-aks-clusters)                                                                                                                               | System Efficiency | Medium  | Verified |         No          |
 | [AKS-15 - Enable and remediate Azure Policies configured for AKS](#aks-15---enable-and-remediate-azure-policies-configured-for-aks)                                                                                         |    Governance     |   Low   | Preview |         No          |
 | [AKS-16 - Enable GitOps when using DevOps frameworks](#aks-16---enable-gitops-when-using-devops-frameworks)                                                                                                                 |    Automation     |   Low   | Preview |         Yes         |
 | [AKS-17 - Configure affinity or anti-affinity rules based on application requirements](#aks-17---configure-affinity-or-anti-affinity-rules-based-on-application-requirements)                                               |   Availability    |  High   | Preview |         No          |
 | [AKS-18 - Configures Pods Liveness, Readiness, and Startup Probes](#aks-18---configures-pods-liveness-readiness-and-startup-probes)                                                                                         |   Availability    |  High   | Preview |         No          |
-| [AKS-19 - Configure Pod replication in production applications to guarantee availability](#aks-19---configure-pod-replication-in-production-applications-to-guarantee-availability)                                         |   Availability    |  High   | Preview |         No          |
+| [AKS-19 - Configure Pod replica sets in production applications to guarantee availability](#aks-19---configure-pod-replica-sets-in-production-applications-to-guarantee-availability)                                         |   Availability    |  High   | Preview |         No          |
+| [AKS-20 - Configure system nodepool count](#aks-20---configure-system-nodepool-count)                                         |   Availability    |  High   | Preview |         Yes          |
+| [AKS-21 - Configure user nodepool count](#aks-21---configure-user-nodepool-count)                                         |   Availability    |  High   | Preview |         Yes          |
+| [AKS-22 - Configure pod disruption budgets (PDBs)](#aks-22---configure-pod-disruption-budgets-pdbs)                                         |   Availability    |  Medium   | Preview |         No          |
+| [AKS-23 - Nodepool subnet size needs to accommodate maximum auto-scale settings](#aks-23---nodepool-subnet-size-needs-to-accommodate-maximum-auto-scale-settings)                                         |   Availability    |  High   | Preview |         Yes          |
+| [AKS-24 - Enforce resource quotas at the namespace level](#aks-24---enforce-resource-quotas-at-the-namespace-level)                                         |   Availability    |  High   | Preview |         No          |
 
 {{< /table >}}
 
@@ -61,7 +66,7 @@ By deploying resources such as aks clusters, virtual machines, storage, and data
 - [AKS Availability Zones](https://learn.microsoft.com/en-us/azure/aks/availability-zones)
 - [Zone Balancing](https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-use-availability-zones#zone-balancing)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -87,7 +92,7 @@ To prevent misconfigured or rogue application pods from accidentally killing sys
 
 - [System and user node pools](https://learn.microsoft.com/en-us/azure/aks/use-system-pools?tabs=azure-cli#system-and-user-node-pools)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -97,7 +102,7 @@ To prevent misconfigured or rogue application pods from accidentally killing sys
 
 <br><br>
 
-### AKS-3 - Enable AKS-managed Azure AD integration
+### AKS-3 - Disable local accounts
 
 **Category: Access & Security**
 
@@ -105,15 +110,15 @@ To prevent misconfigured or rogue application pods from accidentally killing sys
 
 **Guidance**
 
-Local Kubernetes accounts provide a legacy non-auditable means of accessing an AKS cluster and are not recommended for use. Enabling Azure AD integration on an AKS cluster provides several benefits for managing access to the cluster. By using Azure AD, you can centralize user and group management, enforce multi-factor authentication, and enable role-based access control (RBAC) for fine-grained access control to cluster resources. Additionally, Azure AD provides a secure and scalable authentication mechanism that can be integrated with other Azure services and third-party identity providers.
+Local Kubernetes accounts provide a legacy non-auditable means of accessing an AKS cluster and are not recommended for use. Enabling Microsoft Entra integration on an AKS cluster provides several benefits for managing access to the cluster. By using Microsoft Entra, you can centralize user and group management, enforce multi-factor authentication, and enable role-based access control (RBAC) for fine-grained access control to cluster resources. Additionally, Microsoft Entra provides a secure and scalable authentication mechanism that can be integrated with other Azure services and third-party identity providers.
 
 **Resources**
 
-- [Azure AD integration](https://learn.microsoft.com/en-us/azure/aks/concepts-identity#azure-ad-integration)
+- [Entra integration](https://learn.microsoft.com/en-us/azure/aks/concepts-identity#azure-ad-integration)
 - [Use Azure role-based access control for AKS](https://learn.microsoft.com/en-us/azure/aks/manage-azure-rbac?source=recommendations)
 - [Manage AKS local accounts](https://learn.microsoft.com/en-us/azure/aks/manage-local-accounts-managed-azure-ad?source=recommendations)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -138,7 +143,7 @@ The Azure CNI networking solution provides several benefits for managing IP addr
 - [Configure Azure CNI networking](https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation)
 - [Configure Azure CNI Overlay networking](https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -167,11 +172,11 @@ If the cluster has availability zones enabled, the following configuration chang
 **Resources**
 
 - [Use the Cluster Autoscaler on AKS](https://learn.microsoft.com/azure/aks/cluster-autoscaler?tabs=azure-cli)
-- [Best practices for advanced scheduler features](https://learn.microsoft.com/en-us/azure/aks/operator-best-practices-advanced-scheduler)
-- [Node pool scaling considerations and best practices](https://learn.microsoft.com/en-us/azure/aks/operator-best-practices-run-at-scale#node-pool-scaling-considerations-and-best-practices)
-- [Best practices for basic scheduler features](https://learn.microsoft.com/en-us/azure/aks/operator-best-practices-scheduler)
+- [Best practices for advanced scheduler features](https://learn.microsoft.com/azure/aks/operator-best-practices-advanced-scheduler)
+- [Node pool scaling considerations and best practices](https://learn.microsoft.com/azure/aks/best-practices-performance-scale-large#node-pool-scaling)
+- [Best practices for basic scheduler features](https://learn.microsoft.com/azure/aks/operator-best-practices-scheduler)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -196,7 +201,7 @@ AKS is increasingly being used for stateful applications that require a backup s
 - [AKS Backups](https://learn.microsoft.com/en-us/azure/backup/azure-kubernetes-service-cluster-backup)
 - [Best Practices for AKS Backups](https://learn.microsoft.com/en-us/azure/aks/operator-best-practices-storage)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -223,7 +228,7 @@ If you're running an unsupported Kubernetes version, you'll be asked to upgrade 
 - [Upgrade cluster](https://learn.microsoft.com/azure/aks/upgrade-cluster?tabs=azure-cli)
 - [Auto-upgrading cluster](https://learn.microsoft.com/azure/aks/auto-upgrade-cluster)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -233,7 +238,7 @@ If you're running an unsupported Kubernetes version, you'll be asked to upgrade 
 
 <br><br>
 
-### AKS-8 - Ensure that Persistent Volumes in storage account are redundant for Pods with stateful applications
+### AKS-8 - Use zone-redundant storage for persistent volumes when running multi-zone AKS
 
 **Category: Availability**
 
@@ -241,19 +246,25 @@ If you're running an unsupported Kubernetes version, you'll be asked to upgrade 
 
 **Guidance**
 
-Data in an Azure Storage account is always replicated three times in the primary region. Azure Storage for Persistent Volumes offers other options for how your data is replicated in the primary or paired region:
+For applications that need replication of data across availability zones to protect against zonal outages, customers should leverage zone-redundant storage (ZRS) with multi-zone AKS clusters. ZRS replicates data synchronously across three Azure availability zones in the primary region.
 
-- LRS synchronously replicates data 3 times in single physical location. It is least expensive replication but not recommended for apps with high availability and durability. LRS provides eleven 9 durability.
-- ZRS copies data synchronously across 3 availability zone in primary region. ZRS is recommended for apps requiring high availability across zones. ZRS provides twelve 9s durability.
-
-In AKS Premium_ZRS and StandardSSD_ZRS disk types are supported. ZRS disk could be scheduled on the zone or non-zone node, without the restriction that disk volume should be co-located in the same zone as a given node.
+- Azure Disks: Use ZRS disks by setting the disk SKU to StandardSSD_ZRS or Premium_ZRS in a storage class. Also, starting from AKS v1.29 onward, multi-zone AKS clusters will have default storage classes that use ZRS disks.
+- Azure Container Storage: Customers can leverage ZRS disks in Azure Container Storage by creating a storage pool and specifying StandardSSD_ZRS or Premium_ZRS as the SKU. Customers can also create a multi-zone storage pool where the total storage capacity will be distributed across zones.
+- Azure Files: Use ZRS files by setting the SKU to Standard_ZRS or Premium_ZRS in a storage class.
+- Azure Blob: Use ZRS blob by setting the SKU to Standard_ZRS or Premium_ZRS in a storage class.
 
 **Resources**
 
-- [Azure Disk CSI Driver](https://learn.microsoft.com/azure/aks/azure-disk-csi#azure-disk-csi-driver-features)
-- [Virtual Machine Disk Redundancy](https://learn.microsoft.com/azure/virtual-machines/disks-redundancy)
+- [Availability zones overview](https://learn.microsoft.com/azure/reliability/availability-zones-overview?tabs=azure-cli)
+- [Zone-redundant storage](https://learn.microsoft.com/azure/storage/common/storage-redundancy#zone-redundant-storage)
+- [ZRS disks](https://learn.microsoft.com/azure/virtual-machines/disks-redundancy#zone-redundant-storage-for-managed-disks)
+- [Convert a disk from LRS to ZRS](https://learn.microsoft.com/azure/virtual-machines/disks-migrate-lrs-zrs)
+- [Enable multi-zone storage redundancy in Azure Container Storage](https://learn.microsoft.com/azure/storage/container-storage/enable-multi-zone-redundancy)
+- [ZRS files](https://learn.microsoft.com/azure/storage/files/files-redundancy#zone-redundant-storage)
+- [Change the redundancy configuration for a storage account](https://learn.microsoft.com/azure/storage/common/redundancy-migration)
 
-**Resource Graph Query/Scripts**
+
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -263,7 +274,7 @@ In AKS Premium_ZRS and StandardSSD_ZRS disk types are supported. ZRS disk could 
 
 <br><br>
 
-### AKS-9 - Upgrade Persistent Volumes with deprecated version to Azure CSI drivers
+### AKS-9 - Upgrade Persistent Volumes using in-tree drivers to Azure CSI drivers
 
 **Category: Storage**
 
@@ -271,14 +282,14 @@ In AKS Premium_ZRS and StandardSSD_ZRS disk types are supported. ZRS disk could 
 
 **Guidance**
 
-Starting with Kubernetes version 1.26, in-tree persistent volume types kubernetes.io/azure-disk and kubernetes.io/azure-file are deprecated and will no longer be supported. Removing these drivers following their deprecation is not planned, however you should migrate to the corresponding CSI drivers disks.csi.azure.com and file.csi.azure.com.
+From Kubernetes version 1.26 onward, Azure Disk and Azure File in-tree drivers are no longer supported (persistent volume types with the provisioners kubernetes.io/azure-disk and kubernetes.io/azure-file), due to the deprecation of in-tree storage drivers by the Kubernetes Community. Azure Storage is now provided by the Azure Disk and File CSI drivers. While existing deployments using the in-tree drivers are not expected to break, these are no longer tested and customers should update them to use the CSI drivers. Also, to leverage new storage capabilities (new SKUs, features, etc.), customers should be using the CSI drivers.
 
 **Resources**
 
-- [CSI Storage Drivers](https://learn.microsoft.com/en-us/azure/aks/csi-storage-drivers)
+- [CSI Storage Drivers](https://learn.microsoft.com/azure/aks/csi-storage-drivers)
 - [CSI Migrate in Tree Volumes](https://learn.microsoft.com/azure/aks/csi-migrate-in-tree-volumes)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -302,7 +313,7 @@ A resource quota, defined by a ResourceQuota object, provides constraints that l
 
 - [Resource Quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -331,7 +342,7 @@ If the cluster has availability zones enabled, the following configuration chang
 - [Virtual Nodes](https://learn.microsoft.com/azure/aks/virtual-nodes)
 - [Azure Container Instances](https://learn.microsoft.com/azure/container-instances/container-instances-overview)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -356,7 +367,7 @@ Production AKS clusters should be configured with the Standard tier. The AKS fre
 - [Pricing Tiers](https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)
 - [AKS Baseline Architecture](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftoc.json&bc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Fbread%2Ftoc.json#kubernetes-api-server-sla)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -380,7 +391,7 @@ Azure Monitor collects events, captures container logs, collects CPU/Memory info
 
 - [Monitor AKS](https://learn.microsoft.com/azure/aks/monitor-aks)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -390,7 +401,7 @@ Azure Monitor collects events, captures container logs, collects CPU/Memory info
 
 <br><br>
 
-### AKS-14 - Use Ephemeral Disks on AKS clusters
+### AKS-14 - Use Ephemeral OS disks on AKS clusters
 
 **Category: System Efficiency**
 
@@ -398,13 +409,16 @@ Azure Monitor collects events, captures container logs, collects CPU/Memory info
 
 **Guidance**
 
-Ephemeral OS disks provide lower read/write latency on the OS disk of AKS agent nodes since the disk is locally attached, and it is not replicated as managed disks. You will also get faster cluster operations like scale or upgrade thanks to faster re-imaging and boot times.
+Ephemeral disks are ideal as OS disks for stateless applications since they provide better performance and improved reliability by decreasing IO incidents. Additionally, customers won’t incur additional storage costs for the OS, and they can get faster cluster operations like scale or upgrade thanks to faster re-imaging and boot times. AKS will default to using an ephemeral disk as the OS disk if it’s available for the VM SKU selected for node pools if customers don’t explicitly request an Azure managed disk for the OS.
 
 **Resources**
 
-- [AKS Ephemeral OS Disk](https://learn.microsoft.com/samples/azure-samples/aks-ephemeral-os-disk/aks-ephemeral-os-disk/)
+- [Ephemeral OS disk](https://learn.microsoft.com/azure/aks/concepts-storage#ephemeral-os-disk)
+- [Configure an AKS cluster](https://learn.microsoft.com/azure/aks/cluster-configuration)
+- [Everything you want to know about ephemeral OS disks and AKS](https://learn.microsoft.com/samples/azure-samples/aks-ephemeral-os-disk/aks-ephemeral-os-disk/)
 
-**Resource Graph Query/Scripts**
+
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -428,7 +442,7 @@ Azure Policies allow companies to enforce governance best practices in the AKS c
 - [AKS Baseline - Policy Management](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftoc.json&bc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Fbread%2Ftoc.json#policy-management)
 - [Built-in Policy Definitions for AKS](https://learn.microsoft.com/en-us/azure/aks/policy-reference)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -453,7 +467,7 @@ GitOps is an operating model for cloud-native applications that stores applicati
 - [GitOps with AKS](https://learn.microsoft.com/en-us/azure/architecture/guide/aks/aks-cicd-github-actions-and-gitops)
 - [GitOps for AKS - Reference Architecture](https://learn.microsoft.com/en-us/azure/architecture/example-scenario/gitops-aks/gitops-blueprint-aks)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -478,7 +492,7 @@ Configure Topology Spread Constraints to control how Pods are spread across your
 - [Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 - [Assign Pod Node](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -503,7 +517,7 @@ AKS kubelet controller uses liveness probes to validate containers and applicati
 - [Configure probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 - [Assign Pod Node](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -513,7 +527,7 @@ AKS kubelet controller uses liveness probes to validate containers and applicati
 
 <br><br>
 
-### AKS-19 - Configure pod replication in production applications to guarantee availability
+### AKS-19 - Configure pod replica sets in production applications to guarantee availability
 
 **Category: Availability**
 
@@ -527,11 +541,132 @@ Configure ReplicaSets in the Pod or Deployment manifests to maintain a stable se
 
 - [Replica Sets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
 {{< code lang="sql" file="code/aks-19/aks-19.kql" >}} {{< /code >}}
+
+{{< /collapse >}}
+
+<br><br>
+
+### AKS-20 - Configure system nodepool count
+
+**Category: Availability**
+
+**Impact: High**
+
+**Guidance**
+
+The system node pool should be configured with a minimum node count of two to ensure critical system pods are resilient to node outages.
+
+**Resources**
+
+- [System nodepools](https://learn.microsoft.com/azure/aks/use-system-pools?tabs=azure-cli)
+
+**Resource Graph Query**
+
+{{< collapse title="Show/Hide Query/Script" >}}
+
+{{< code lang="sql" file="code/aks-20/aks-20.kql" >}} {{< /code >}}
+
+{{< /collapse >}}
+
+<br><br>
+
+### AKS-21 - Configure user nodepool count
+
+**Category: Availability**
+
+**Impact: High**
+
+**Guidance**
+
+The user node pool should be configured with a minimum node count of two if the application requires high availability.
+
+**Resources**
+
+- [Azure Well-Architected Framework review for Azure Kubernetes Service (AKS)](https://learn.microsoft.com/azure/well-architected/service-guides/azure-kubernetes-service#design-checklist)
+
+**Resource Graph Query**
+
+{{< collapse title="Show/Hide Query/Script" >}}
+
+{{< code lang="sql" file="code/aks-21/aks-21.kql" >}} {{< /code >}}
+
+{{< /collapse >}}
+
+<br><br>
+
+### AKS-22 - Configure pod disruption budgets (PDBs)
+
+**Category: Availability**
+
+**Impact: Medium**
+
+**Guidance**
+
+A Pod Disruption Budget (PDB) is a Kubernetes resource that allows you to configure the minimum number or percentage of pods that should remain available during voluntary disruptions, such as maintenance or scaling events. To maintain the availability of applications, define Pod Disruption Budgets (PDBs) to make sure that a minimum number of pods are available in the cluster.
+
+**Resources**
+
+- [Configure PDBs](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
+- [Plan availability using PDBs](https://learn.microsoft.com/azure/aks/operator-best-practices-scheduler#plan-for-availability-using-pod-disruption-budgets)
+
+**Resource Graph Query**
+
+{{< collapse title="Show/Hide Query/Script" >}}
+
+{{< code lang="sql" file="code/aks-22/aks-22.kql" >}} {{< /code >}}
+
+{{< /collapse >}}
+
+<br><br>
+
+### AKS-23 - Nodepool subnet size needs to accommodate maximum auto-scale settings
+
+**Category: Availability**
+
+**Impact: High**
+
+**Guidance**
+
+Nodepool subnets should be sized to accommodate maximum auto-scale settings. By properly sizing the subnet, AKS can efficiently scale out nodes to meet increased demand, reducing the risk of resource constraints and potential service disruptions.
+
+**Resources**
+
+- [AKS Networking](https://learn.microsoft.com/azure/aks/concepts-network)
+
+**Resource Graph Query**
+
+{{< collapse title="Show/Hide Query/Script" >}}
+
+{{< code lang="sql" file="code/aks-23/aks-23.kql" >}} {{< /code >}}
+
+{{< /collapse >}}
+
+<br><br>
+
+### AKS-24 - Enforce resource quotas at the namespace level
+
+**Category: Availability**
+
+**Impact: High**
+
+**Guidance**
+
+Enforcing namespace-level resource quotas is crucial for ensuring reliability by preventing resource exhaustion and maintaining cluster stability. This helps prevent individual applications or users from monopolizing resources, which can lead to degraded performance or outages for other applications in the cluster.
+
+**Resources**
+
+- [Resource quotas](https://learn.microsoft.com/azure/aks/operator-best-practices-scheduler#enforce-resource-quotas)
+
+**Resource Graph Query**
+
+{{< collapse title="Show/Hide Query/Script" >}}
+
+{{< code lang="sql" file="code/aks-24/aks-24.kql" >}} {{< /code >}}
 
 {{< /collapse >}}
 

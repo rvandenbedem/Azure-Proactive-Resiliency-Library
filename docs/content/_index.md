@@ -4,6 +4,19 @@ description = "Welcome to the home of the Azure Proactive Resiliency Library (AP
 weight = 1
 +++
 
+{{< alert style="danger" >}}
+
+## ARCHIVE NOTICE
+
+The APRL repository has undergone migration to a new repository called APRLv2.
+As of April 15, 2024, it has been ARCHIVED and will no longer receive support or updates.
+
+### New Repository: [https://github.com/Azure/Azure-Proactive-Resiliency-Library-v2](https://github.com/Azure/Azure-Proactive-Resiliency-Library-v2)
+
+### [aka.ms/aprl](https://aka.ms/aprl) will redirect to the new website starting April 15th
+
+{{< /alert >}}
+
 Welcome to the home of the Azure Proactive Resiliency Library (APRL).
 
 <img src="/Azure-Proactive-Resiliency-Library/media/img/aprl-white.png" width=40%>
@@ -11,11 +24,11 @@ Welcome to the home of the Azure Proactive Resiliency Library (APRL).
 
 This library is built with the intention of being a staging area for guidance and recommendations that can be used by customers, partners and the field in Well-Architected Framework reliability engagements/assessments; with the intent of the guidance and recommendations being promoted, once tested and validated with customers and partners, into the official [Well-Architected Framework documentation](https://aka.ms/waf).
 
-The library also contains supporting [Azure Resource Graph (ARG)](https://learn.microsoft.com/azure/governance/resource-graph/overview) queries, and sometimes [Azure PowerShell](https://learn.microsoft.com/powershell/azure/what-is-azure-powershell) or [Azure CLI](https://learn.microsoft.com/cli/azure/what-is-azure-cli) scripts, that can help customers, partners and the field identify resources that may or may not be compliant with the guidance and recommendations. The intent for these queries, in the long-term, is to make them part of the [Azure Advisor](https://learn.microsoft.com/azure/advisor/advisor-overview) service.
+The library also contains supporting [Azure Resource Graph (ARG)](https://learn.microsoft.com/azure/governance/resource-graph/overview) queries that can help customers, partners and the field identify resources that may or may not be compliant with the guidance and recommendations. The intent for these queries, in the long-term, is to make them part of the [Azure Advisor](https://learn.microsoft.com/azure/advisor/advisor-overview) service.
 
 ## Get Started
 
-To get started head over to the [Azure Services section]({{< ref "services/_index.md">}}) and then navigate via the appropriate category to find guidance, recommendations alongside supporting Azure Resource Graph queries, Azure PowerShell or Azure CLI scripts to help you discover compliant/non-compliant resources in your environment.
+To get started head over to the [Azure Services section]({{< ref "services/_index.md">}}) and then navigate via the appropriate category to find guidance, recommendations alongside supporting Azure Resource Graph queries to help you discover compliant/non-compliant resources in your environment.
 
 {{< alert style="info" >}}
 
@@ -29,10 +42,10 @@ In APRL you will see a number of terms used, like Preview & Verified. The below 
 
 {{< table style="table-striped" >}}
 
-| Term | Definition |
-| ---- | ---------- |
-| Preview Guidance | Guidance that Microsoft FTEs have created based on customer engagements and is in the process of reviewing with the relevant Azure Product Group Engineering Service owners to ensure the content is valid and accurate |
-| Verified Guidance | Guidance has been signed off by Azure Product Group Engineering Service owners following their review |
+| Term              | Definition                                                                                                                                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preview Guidance  | Guidance that Microsoft FTEs have created based on customer engagements and is in the process of reviewing with the relevant Azure Product Group Engineering Service owners to ensure the content is valid and accurate |
+| Verified Guidance | Guidance has been signed off by Azure Product Group Engineering Service owners following their review                                                                                                                   |
 
 {{< /table >}}
 

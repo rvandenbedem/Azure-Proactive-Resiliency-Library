@@ -16,10 +16,10 @@ The below table shows the list of resiliency recommendations for Load Balancer a
 {{< table style="table-striped" >}}
 | Recommendation                                                                                                                                          |   Category   | Impact |  State  | ARG Query Available |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------|:------------:|:------:|:-------:|:-------------------:|
-| [LB-1 - Use Standard Load Balancer SKU](#lb-1---use-standard-load-balancer-sku)                                                                         | Availability |  High  | Preview |         Yes         |
-| [LB-2 - Ensure the Backend Pool contains at least two instances](#lb-2---ensure-the-backend-pool-contains-at-least-two-instances)                       | Availability |  High  | Preview |         Yes         |
-| [LB-3 - Use NAT Gateway instead of Outbound Rules for Production Workloads](#lb-3---use-nat-gateway-instead-of-outbound-rules-for-production-workloads) | Availability | Medium | Preview |         Yes         |
-| [LB-4 - Ensure Standard Load Balancer is zone-redundant](#lb-4---ensure-standard-load-balancer-is-zone-redundant)                                       | Availability |  High  | Preview |         Yes         |
+| [LB-1 - Use Standard Load Balancer SKU](#lb-1---use-standard-load-balancer-sku)                                                                         | Availability |  High  | Verified |         Yes         |
+| [LB-2 - Ensure the Backend Pool contains at least two instances](#lb-2---ensure-the-backend-pool-contains-at-least-two-instances)                       | Availability |  High  | Verified |         Yes         |
+| [LB-3 - Use NAT Gateway instead of Outbound Rules for Production Workloads](#lb-3---use-nat-gateway-instead-of-outbound-rules-for-production-workloads) | Availability | Medium | Verified |         Yes         |
+| [LB-4 - Ensure Standard Load Balancer is zone-redundant](#lb-4---ensure-standard-load-balancer-is-zone-redundant)                                       | Availability |  High  | Verified |         Yes         |
 {{< /table >}}
 
 {{< alert style="info" >}}
@@ -45,7 +45,7 @@ Select Standard SKU Standard Load Balancer provides a dimension of reliability t
 - [Reliability and Azure Load Balancer](https://learn.microsoft.com/azure/architecture/framework/services/networking/azure-load-balancer/reliability)
 - [Resiliency checklist for specific Azure services- Azure Load Balancer](https://learn.microsoft.com/azure/architecture/checklist/resiliency-per-service#azure-load-balancer)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -69,7 +69,7 @@ Select Standard SKU Standard Load Balancer provides a dimension of reliability t
 
 - [Resiliency checklist for specific Azure services- Azure Load Balancer](https://learn.microsoft.com/azure/architecture/checklist/resiliency-per-service#azure-load-balancer)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -87,13 +87,13 @@ Select Standard SKU Standard Load Balancer provides a dimension of reliability t
 
 **Guidance**
 
-Outbound rules ensure that you are not faced with connection failures as a result of SNAT port exhaustion. While outbound rules will help improve the solution for small to mid size deployments, for production workloads, we recommend coupling Standard Load Balancer or any subnet deployment with VNet NAT.
+Outbound rules for Standard Public Load Balancer requires you to manually allocate fixed amounts of ports to each of your backend pool instances. Because the SNAT port allocation is fixed, outbound rules does not provide the most scalable method for outbound connectivity. For production workloads, we recommend using NAT Gateway instead in order to prevent the risk of connection failures due to SNAT port exhaustion. NAT Gateway scales dynamically and provides secure connectivity to the internet.
 
 **Resources**
 
 - [Resiliency checklist for specific Azure services- Azure Load Balancer](https://learn.microsoft.com/azure/architecture/checklist/resiliency-per-service#azure-load-balancer)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
@@ -111,13 +111,13 @@ Outbound rules ensure that you are not faced with connection failures as a resul
 
 **Guidance**
 
- In a region with Availability Zones, a Standard Load Balancer can be zone-redundant with traffic served by a single IP address. A single frontend IP address survives zone failure. The frontend IP may be used to reach all (non-impacted) backend pool members no matter the zone. Up to one availability zone can fail and the data path survives as long as the remaining zones in the region remain healthy.
+In a region with Availability Zones, a Standard Load Balancer can be made zone-redundant by assigning it with a zone-redundant frontend IP address. With a zone-redundant frontend IP, the load balancer will continue to distribute traffic even when one availability zone fails, as long as there are other healthy zones and corresponding healthy backend instances in these zones that can receive traffic.
 
 **Resources**
 
 - [Load Balancer and Availability Zones](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-availability-zones#zone-redundant)
 
-**Resource Graph Query/Scripts**
+**Resource Graph Query**
 
 {{< collapse title="Show/Hide Query/Script" >}}
 
